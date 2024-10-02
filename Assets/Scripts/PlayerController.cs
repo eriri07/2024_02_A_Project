@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
 using UnityEngine;
 
-public class PlayerContoller : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [Header("Player Movement")]
     public float moveSpeed = 5.0f;
     public float jumpForce = 5.0f;
+    public float rotationSpeed = 10.0f;
 
-    private bool isFirstPerson = true;
+    public bool isFirstPerson = true;
     private bool isGrounded;
     private Rigidbody rb;
 
@@ -33,6 +35,9 @@ public class PlayerContoller : MonoBehaviour
     {
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
+
+        Vector3 movement;
+
         if (!isFirstPerson)
         {
             Vector3 cameraForward = thirdPersonCamera.transform.forward;
@@ -43,13 +48,20 @@ public class PlayerContoller : MonoBehaviour
             cameraRight.y = 0.0f;
             cameraRight.Normalize();
 
-            Vector3 movement = cameraRight * moveHorizontal + cameraForward * moveVertical;
+            movement = cameraRight * moveHorizontal + cameraForward * moveVertical;
         }
         else
         {
-            Vector3 movement = transform.right * moveHorizontal + transform.forward * moveVertical;
-            rb.MovePosition(rb.position + movement * moveSpeed * Time.deltaTime);
+            movement = transform.right * moveHorizontal + transform.forward * moveVertical;
         }
+
+        if (movement.magnitude > 0.1f)
+        {
+            Quaternion toRotation = Quaternion.LookRotation(movement, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+        }
+
+        rb.MovePosition(rb.position + movement * Time.deltaTime);   
     }
     void HandleJump()
     {
@@ -72,11 +84,11 @@ public class PlayerContoller : MonoBehaviour
         targetVerticalRotation = Mathf.Clamp(targetVerticalRotation, yMinLimit, yMaxLimit);
         phi = Mathf.MoveTowards(phi, targetVerticalRotation, verticalRotationSpeed * Time.deltaTime);
 
-        transform.rotation = Quaternion.Euler(0.0f, theta, 0.0f);
-
         if (isFirstPerson)
         {
             firstPersonCamera.transform.localRotation = Quaternion.Euler(phi, 0.0f, 0.0f);
+
+            transform.rotation = Quaternion.Euler(0.0f, theta, 0.0f);
         }
         else
         {
@@ -109,10 +121,14 @@ public class PlayerContoller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleMovement();
         HandleJump();
         HandleRotation();
         HandleCameraToggle();   
+    }
+
+    private void FixedUpdate()
+    {
+        HandleMovement();
     }
 
     void SetupCameras()
