@@ -750,6 +750,7 @@ GameObject:
   - component: {fileID: 1928007692}
   - component: {fileID: 1928007691}
   - component: {fileID: 1928007690}
+  - component: {fileID: 1928007696}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -772,7 +773,6 @@ MonoBehaviour:
   moveSpeed: 5
   jumpForce: 5
   rotationSpeed: 10
-  isFirstPerson: 1
   firstPersonCamera: {fileID: 330585545}
   thirdPersonCamera: {fileID: 1069841753}
   mouseSenesivity: 2
@@ -781,6 +781,10 @@ MonoBehaviour:
   maxRadius: 10
   yMinLimit: -90
   yMaxLimit: 90
+  isFirstPerson: 1
+  fallingThreshold: 0.1
+  groundedCheckDistance: 0.3
+  slopedLimit: 45
 --- !u!54 &1928007691
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -898,6 +902,19 @@ Transform:
   - {fileID: 1069841756}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1928007696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928007689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f81fedfa40831644e8df164dc7e6d469, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerController: {fileID: 1928007690}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

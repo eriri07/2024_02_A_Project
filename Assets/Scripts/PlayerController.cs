@@ -10,10 +10,6 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 5.0f;
     public float rotationSpeed = 10.0f;
 
-    public bool isFirstPerson = true;
-    private bool isGrounded;
-    private Rigidbody rb;
-
     [Header("Camera Setting")]
     public Camera firstPersonCamera;
     public Camera thirdPersonCamera;
@@ -31,7 +27,17 @@ public class PlayerController : MonoBehaviour
     private float targetVerticalRotation = 0;
     private float verticalRotationSpeed = 240f;
 
-    void HandleMovement()
+    public bool isFirstPerson = true;
+    //private bool isGrounded;
+    private Rigidbody rb;
+
+    public float fallingThreshold = 0.1f;
+
+    [Header("Gorunded Check Setting")]
+    public float groundedCheckDistance = 0.3f;
+    public float slopedLimit = 45f;
+
+    public void HandleMovement()
     {
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
@@ -63,16 +69,15 @@ public class PlayerController : MonoBehaviour
 
         rb.MovePosition(rb.position + movement * Time.deltaTime);   
     }
-    void HandleJump()
+    public void HandleJump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (isGrounded())
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            isGrounded = false;
         }
     }
 
-    void HandleRotation()
+    public void HandleRotation()
     {
         float mouseX = Input.GetAxis("Mouse X") * mouseSenesivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSenesivity;
@@ -103,11 +108,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnCollisionStay(Collision collision)
-    {
-        isGrounded = true;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -121,9 +121,13 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleJump();
         HandleRotation();
-        HandleCameraToggle();   
+        HandleCameraToggle();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            HandleJump();
+        }
     }
 
     private void FixedUpdate()
@@ -151,5 +155,20 @@ public class PlayerController : MonoBehaviour
         firstPersonCamera.gameObject.SetActive(isFirstPerson);
         thirdPersonCamera.gameObject.SetActive(!isFirstPerson);
 
+    }
+
+    public bool isFalling()
+    {
+        return rb.velocity.y < fallingThreshold && !isGrounded();
+    }
+
+    public bool isGrounded()
+    {
+        return Physics.Raycast(transform.position, Vector3.down, 2.0f);
+    }
+
+    public float GetVerticalVelocity()
+    {
+        return rb.velocity.y;
     }
 }
