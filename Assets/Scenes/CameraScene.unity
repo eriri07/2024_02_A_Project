@@ -2154,6 +2154,7 @@ GameObject:
   - component: {fileID: 1928007698}
   - component: {fileID: 1928007699}
   - component: {fileID: 1928007700}
+  - component: {fileID: 1928007701}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2173,7 +2174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 528ec5d041455e94086f7ef64d4a1ba9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
+  moveSpeed: 5
   jumpForce: 5
   rotationSpeed: 10
   firstPersonCamera: {fileID: 330585545}
@@ -2383,6 +2384,25 @@ MonoBehaviour:
   lastPosition: {x: 0, y: 0, z: 0}
   moveThreshold: 0
   currentNearbyBuilding: {fileID: 0}
+--- !u!114 &1928007701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928007689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68d92170c434fe84cbb1bb59f09c2f93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHunger: 100
+  currentHunger: 0
+  hungerDecreaseRate: 1
+  maxSuitDurability: 100
+  currentSuitDurability: 0
+  havestingDamage: 5
+  craftingDamage: 3
 --- !u!1001 &1934922937
 PrefabInstance:
   m_ObjectHideFlags: 0
