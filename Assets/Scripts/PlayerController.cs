@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
         }
 
-        rb.MovePosition(rb.position + movement * Time.deltaTime);   
+        rb.MovePosition(rb.position + movement * moveSpeed * Time.deltaTime);   
     }
     public void HandleJump()
     {
